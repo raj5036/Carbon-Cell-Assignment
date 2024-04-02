@@ -23,6 +23,12 @@ exports.loginValidator = {
 	}
 };
 
+exports.logoutValidator = {
+	body: {
+		token: joi.string().required()
+	}
+}
+
 exports.dataFetchValidator = {
 	query: {
 		category: joi.string().required(),

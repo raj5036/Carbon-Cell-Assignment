@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const {error} = require("../utils/responseApi");
+const { AccessTokens } = require("../database");
 
 exports.authenticateToken = (req, res, next) => {
 	/* 
@@ -27,7 +28,7 @@ exports.authenticateToken = (req, res, next) => {
 	}
 
 	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
-		if (error) {
+		if (error || !AccessTokens.includes(token)) {
 			return res.sendStatus(403).json(error("Forbidden. Access is denied", res.statusCode, null));
 		}
 		req.user = user;

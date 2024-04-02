@@ -15,6 +15,10 @@ router.post(
 	validate(Validator.loginValidator),
 	UserController.login
 );
-router.delete('/logout', UserController.logout);
+router.delete(
+	'/logout', 
+	validate(Validator.logoutValidator),
+	UserController.logout
+);
 
 module.exports = router;

@@ -92,20 +92,34 @@ exports.login = async (req, res) => {
 }
 
 exports.logout = (req, res) => {
+	try {
 	/* 
-		#swagger.summary = 'Logout API'
-		#swagger.description = 'This API logs out existing users.'
-		#swagger.responses[204] = {
-			description: 'User has been logged out successfully.',
-			schema: {
-				message: "User has been logged out successfully.",
-				results: null,
-				code: 204
+			#swagger.summary = 'Logout API'
+			#swagger.description = 'This API logs out existing users.'
+			#swagger.responses[204] = {
+				description: 'User has been logged out successfully.',
+				schema: {
+					message: "User has been logged out successfully.",
+					results: null,
+					code: 204
+				}
 			}
+		*/
+		const { token } = req.body;
+		if (!AccessTokens.includes(token)) {
+			return res.status(404).json(error("FAILURE", res.statusCode, "No such accessToken found"));
 		}
-	*/
-	AccessTokens = AccessTokens.filter(token => token !== req.body.token);
-	res.status(204).json(success("User has been logged out successfully.", null, res.statusCode));
+
+		const updatedAccessTokens = AccessTokens.filter(accessToken => accessToken !== token);
+		AccessTokens.length = 0;
+		updatedAccessTokens.forEach(accessToken => {
+			AccessTokens.push(accessToken);
+		});
+		res.status(204).json(success("User has been logged out successfully.", null, res.statusCode));
+	} catch (e) {
+		console.log("Error in logging out", e);
+		res.status(500).json(error("FAILURE", res.statusCode, e));
+	}
 }
 
 const generateAccessToken = (user) => {
