@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { Users, RefreshTokens } = require("../database");
+const { error, success } = require('../utils/responseApi');
 
 exports.registration = async (req, res) => {
 	try {
@@ -9,10 +10,7 @@ exports.registration = async (req, res) => {
 		// If username already exists
 		const userAlreadyExists = Users.some(user => user.username === username);
 		if (userAlreadyExists) {
-			return res.status(409).json({
-				code: "FAILURE",
-				message: "username already exists"
-			});
+			return res.status(409).json(error("FAILURE", res.statusCode, "username already exists"));
 		}
 		const saltRounds = 10;
 		const passwordHash = await bcrypt.hash(password, saltRounds);
@@ -26,16 +24,10 @@ exports.registration = async (req, res) => {
 		Users.push(newUser);
 		console.log(Users)
 
-		res.status(201).json({
-			code: "SUCCESS",
-			message: "User successfully created."
-		});
+		res.status(201).json(success("User successfully created.", null, res.statusCode));
 	} catch (e) {
 		console.log("Error in generating Password Hash", e);
-		res.status(500).json({
-			code: "FAILURE",
-			message: "Something went wrong " + e 
-		});
+		res.status(500).json(error("FAILURE", res.statusCode, e));
 	}
 };
 
@@ -44,38 +36,25 @@ exports.login = async (req, res) => {
 
 	const users = Users.filter(user => user.username === username);
 	if (!users.length) {
-		return res.status(404).json({
-			code: "FAILURE",
-			message: "No such user exists."
-		});
+		return res.status(404).json(error("FAILURE", res.statusCode, "No such user exists."));
 	}
 	const user = users[0];
 	const passwordMatch = await bcrypt.compare(password, user.password);
 	if (!passwordMatch) {
-		return res.status(400).json({
-			code: "FAILURE",
-			message: "Password is invalid"
-		});
+		return res.status(400).json(error("FAILURE", res.statusCode, "Password is invalid"));
 	}
 
 	// Do JWT Serialization here to authorize
 	const accessToken = generateAccessToken(user);
 	const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
 	RefreshTokens.push(refreshToken);
-
-	return res.status(200).json({
-		code: "SUCCESS",
-		accessToken,
-		refreshToken
-	})
+ 
+	res.status(200).json(success("User successfully created.", {accessToken, refreshToken}, res.statusCode));
 }
 
 exports.logout = (req, res) => {
 	refreshTokens = refreshTokens.filter(token => token !== req.body.token)
-  	res.status(204).json({
-		code: "SUCCESS",
-		message: "User has been logged out successfully."
-	})
+	res.status(204).json(success("User has been logged out successfully.", null, res.statusCode));
 }
 
 const generateAccessToken = (user) => {

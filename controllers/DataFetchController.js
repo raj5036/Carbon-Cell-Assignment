@@ -11,16 +11,8 @@ exports.fetchData = async (req, res) => {
 			.filter(entry => entry.Category === category)
 			.slice(0, limit);
 
-		res.status(200).json(success("SUCCESS", result, res.statusCode))
-		// res.status(200).json({
-		// 	code: "SUCCESS",
-		// 	result
-		// });
+		res.status(200).json(success("SUCCESS", result, res.statusCode));
 	} catch (e) {
-		res.status(500).json(error("FAILURE", res.statusCode, e))
-		// res.status(500).json({
-		// 	code: "FAILURE",
-		// 	message: e
-		// });
+		res.status(500).json(error("FAILURE", res.statusCode, e));
 	}
 };
