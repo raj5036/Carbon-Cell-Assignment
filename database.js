@@ -6,4 +6,4 @@ exports.Users = [
 	}
 ];
 
-exports.RefreshTokens = [];
+exports.AccessTokens = [];

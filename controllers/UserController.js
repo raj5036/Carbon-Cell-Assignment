@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { Users, RefreshTokens } = require("../database");
+const { Users, AccessTokens } = require("../database");
 const { error, success } = require('../utils/responseApi');
 
 exports.registration = async (req, res) => {
@@ -87,10 +87,9 @@ exports.login = async (req, res) => {
 
 	// Do JWT Serialization here to authorize
 	const accessToken = generateAccessToken(user);
-	const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
-	RefreshTokens.push(refreshToken);
+	AccessTokens.push(accessToken);
  
-	res.status(200).json(success("User successfully logged in.", {accessToken, refreshToken}, res.statusCode));
+	res.status(200).json(success("User successfully logged in.", {accessToken}, res.statusCode));
 }
 
 exports.logout = (req, res) => {
@@ -106,7 +105,7 @@ exports.logout = (req, res) => {
 			}
 		}
 	*/
-	RefreshTokens = RefreshTokens.filter(token => token !== req.body.token)
+	AccessTokens = AccessTokens.filter(token => token !== req.body.token);
 	res.status(204).json(success("User has been logged out successfully.", null, res.statusCode));
 }
 
