@@ -1,5 +1,3 @@
-// https://rajputankit22.medium.com/how-to-add-swagger-to-nodejs-rest-api-7caa870741be
-// https://medium.com/@samuelnoye35/simplifying-api-development-in-node-js-with-swagger-a5021ac45742
 require('dotenv').config();
 
 const express = require('express');

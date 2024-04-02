@@ -28,7 +28,6 @@ exports.success = (message, results, statusCode) => {
    * @param		{any} error 	
    */
   exports.error = (message, statusCode, error) => {
-	console.log("error: here", statusCode)
 	// List of common HTTP request code
 	const codes = [200, 201, 400, 401, 404, 403, 422, 500];
   

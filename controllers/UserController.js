@@ -36,7 +36,6 @@ exports.registration = async (req, res) => {
 		}
 	
 		Users.push(newUser);
-		console.log(Users)
 
 		res.status(201).json(success("User successfully created.", null, res.statusCode));
 	} catch (e) {
