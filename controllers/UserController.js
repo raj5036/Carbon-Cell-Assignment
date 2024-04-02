@@ -6,6 +6,20 @@ const { error, success } = require('../utils/responseApi');
 exports.registration = async (req, res) => {
 	try {
 		const {username, email, password} = req.body;
+		/* 
+			#swagger.summary = 'Registration API'
+			#swagger.description = 'This API registers new users.'
+			#swagger.responses[201] = {
+				description: 'User created successfully',
+			}
+			#swagger.responses[409] = {
+				description: 'username already exists',
+			}
+			#swagger.responses[500] = {
+				description: 'Something went wrong. Internal Server Error.',
+				schema: { $ref: '#/definitions/errorResponse.500' }
+			}
+  		*/
 
 		// If username already exists
 		const userAlreadyExists = Users.some(user => user.username === username);
@@ -33,6 +47,33 @@ exports.registration = async (req, res) => {
 
 exports.login = async (req, res) => {
 	const {username, password} = req.body;
+	/* 
+		#swagger.summary = 'Login API'
+		#swagger.description = 'This API logs in existing users.'
+		#swagger.responses[200] = {
+			description: 'User successfully logged in',
+			schema: {
+				message: "User successfully logged in",
+				results: {
+					accessToken: "",
+					refreshToken: ""
+				},
+				code: 200
+			}
+		}
+		#swagger.responses[400] = {
+			description: 'Password is Invalid',
+			schema: { $ref: '#/definitions/errorResponse.400' }
+		}
+		#swagger.responses[404] = {
+			description: 'No such user exists',
+			schema: { $ref: '#/definitions/errorResponse.404' }
+		}
+		#swagger.responses[500] = {
+			description: 'Something went wrong. Internal Server Error.',
+			schema: { $ref: '#/definitions/errorResponse.500' }
+		}
+	*/
 
 	const users = Users.filter(user => user.username === username);
 	if (!users.length) {
@@ -49,11 +90,23 @@ exports.login = async (req, res) => {
 	const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
 	RefreshTokens.push(refreshToken);
  
-	res.status(200).json(success("User successfully created.", {accessToken, refreshToken}, res.statusCode));
+	res.status(200).json(success("User successfully logged in.", {accessToken, refreshToken}, res.statusCode));
 }
 
 exports.logout = (req, res) => {
-	refreshTokens = refreshTokens.filter(token => token !== req.body.token)
+	/* 
+		#swagger.summary = 'Logout API'
+		#swagger.description = 'This API logs out existing users.'
+		#swagger.responses[204] = {
+			description: 'User has been logged out successfully.',
+			schema: {
+				message: "User has been logged out successfully.",
+				results: null,
+				code: 204
+			}
+		}
+	*/
+	RefreshTokens = RefreshTokens.filter(token => token !== req.body.token)
 	res.status(204).json(success("User has been logged out successfully.", null, res.statusCode));
 }
 

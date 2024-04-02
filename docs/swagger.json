@@ -24,7 +24,11 @@
   "paths": {
     "/fetch-data": {
       "get": {
-        "description": "",
+        "tags": [
+          "Data Retrieval API"
+        ],
+        "summary": "Retrieves data from Public API",
+        "description": "This API fetches data from Public API and filters them by Category \r \t\t\t\t\t\t\t\t\t& returns result within given Limit",
         "parameters": [
           {
             "name": "authorization",
@@ -44,16 +48,45 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Fetched data successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "SUCCESS"
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "code": {
+                  "type": "number",
+                  "example": 200
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized. No Authorization token found.",
+            "schema": {
+              "$ref": "#/definitions/errorResponse.401"
+            }
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Forbidden. Access is denied. Authorization token is invalid",
+            "schema": {
+              "$ref": "#/definitions/errorResponse.403"
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Something went wrong. Internal Server Error.",
+            "schema": {
+              "$ref": "#/definitions/errorResponse.500"
+            }
           }
         }
       }
@@ -80,7 +113,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Authorization is successful",
+            "description": "Operation is successful",
             "schema": {
               "type": "object",
               "properties": {
@@ -103,17 +136,24 @@
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized. No Authorization token found.",
+            "schema": {
+              "$ref": "#/definitions/errorResponse.401"
+            }
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Forbidden. Access is denied. Authorization token is invalid",
+            "schema": {
+              "$ref": "#/definitions/errorResponse.403"
+            }
           }
         }
       }
     },
     "/auth/registration": {
       "post": {
-        "description": "",
+        "summary": "Registration API",
+        "description": "This API registers new users.",
         "parameters": [
           {
             "name": "body",
@@ -136,20 +176,24 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "User created successfully"
           },
           "409": {
-            "description": "Conflict"
+            "description": "username already exists"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Something went wrong. Internal Server Error.",
+            "schema": {
+              "$ref": "#/definitions/errorResponse.500"
+            }
           }
         }
       }
     },
     "/auth/login": {
       "post": {
-        "description": "",
+        "summary": "Login API",
+        "description": "This API logs in existing users.",
         "parameters": [
           {
             "name": "body",
@@ -169,20 +213,62 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "User successfully logged in",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User successfully logged in"
+                },
+                "results": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "refreshToken": {
+                      "type": "string",
+                      "example": ""
+                    }
+                  }
+                },
+                "code": {
+                  "type": "number",
+                  "example": 200
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Password is Invalid",
+            "schema": {
+              "$ref": "#/definitions/errorResponse.400"
+            }
           },
           "404": {
-            "description": "Not Found"
+            "description": "No such user exists",
+            "schema": {
+              "$ref": "#/definitions/errorResponse.404"
+            }
+          },
+          "500": {
+            "description": "Something went wrong. Internal Server Error.",
+            "schema": {
+              "$ref": "#/definitions/errorResponse.500"
+            }
           }
         }
       }
     },
     "/auth/logout": {
       "delete": {
-        "description": "",
+        "summary": "Logout API",
+        "description": "This API logs out existing users.",
         "parameters": [
           {
             "name": "body",
@@ -199,7 +285,24 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "User has been logged out successfully.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User has been logged out successfully."
+                },
+                "results": {},
+                "code": {
+                  "type": "number",
+                  "example": 204
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -223,6 +326,45 @@
         }
       }
     },
+    "errorResponse.400": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "example": "400"
+        },
+        "message": {
+          "type": "string",
+          "example": "Bad request"
+        }
+      }
+    },
+    "errorResponse.401": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "example": "401"
+        },
+        "message": {
+          "type": "string",
+          "example": "Unauthorized"
+        }
+      }
+    },
+    "errorResponse.403": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "example": "403"
+        },
+        "message": {
+          "type": "string",
+          "example": "Forbidden. Access is Denied."
+        }
+      }
+    },
     "errorResponse.404": {
       "type": "object",
       "properties": {
@@ -233,6 +375,19 @@
         "message": {
           "type": "string",
           "example": "Not found"
+        }
+      }
+    },
+    "errorResponse.500": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "example": "500"
+        },
+        "message": {
+          "type": "string",
+          "example": "Internal Server Error"
         }
       }
     }

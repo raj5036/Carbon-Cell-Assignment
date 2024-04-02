@@ -35,9 +35,25 @@ const doc = {
       "data": "" | [],
       
     },
+    'errorResponse.400': {
+      "code": "400",
+      "message": "Bad request",
+    },
+    'errorResponse.401': {
+      "code": "401",
+      "message": "Unauthorized",
+    },
+    'errorResponse.403': {
+      "code": "403",
+      "message": "Forbidden. Access is Denied.",
+    },
     'errorResponse.404': {
       "code": "404",
       "message": "Not found",
+    },
+    'errorResponse.500': {
+      "code": "500",
+      "message": "Internal Server Error",
     },
   },          // by default: empty object (Swagger 2.0)
 };

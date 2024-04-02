@@ -36,7 +36,7 @@ app.get('/post', authenticateToken, (req, res) => {
 		#swagger.consumes = ['application/json']
 		#swagger.produces = ['application/json']
 		#swagger.responses[200] = {
-			description: 'Authorization is successful',
+			description: 'Operation is successful',
 			schema: {
 				message: "SUCCESS",
 				result: {},
